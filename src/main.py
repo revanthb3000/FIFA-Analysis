@@ -33,9 +33,28 @@ def getAttributePlot(attribute, fifaVersion):
     plottingFunctions.plotDistribution(filteredResults, attribute, fifaVersion)
     databaseQueries.closeDatabaseConnection(connection)
 
+def plotCurves(fifaVersion):
+    finalBaseAttribute = "HEA"
+    if(fifaVersion == 15):
+        finalBaseAttribute = "PHY"
+    playerStatsFields = ["PAC","SHO","PAS","DRI",
+                        "DEF",finalBaseAttribute,"Ball_Control", 
+                        "Crossing", "Curve", "Dribbling", "Finishing", 
+                        "Free_Kick_Accuracy","Heading_Accuracy", "Long_Passing", 
+                        "Long_Shots", "Marking", "Penalties", "Short_Passing",
+                        "Shot_Power", "Sliding_Tackle", "Standing_Tackle", "Volleys", 
+                        "Acceleration", "Agility", "Balance","Jumping", "Reactions", 
+                        "Sprint_Speed", "Stamina","Strength", "Aggression", "Positioning", 
+                        "Interceptions","Vision", "Player_Rating"]
+
+    for attribute in playerStatsFields:
+        getAttributePlot(attribute, fifaVersion)
+        
+
 def main():
 #     simpleRun()
-    getAttributePlot("PAC", 15)
+    plotCurves(15)
+
     return
 
 if __name__ == '__main__':

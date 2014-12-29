@@ -1,6 +1,7 @@
 """
 This function will contain all functions that will be frequently used.
 """
+import numpy
 
 def getPlayerAttributeMapping(results, attribute):
     filteredResults = {}
@@ -26,3 +27,13 @@ def getMaximumAndMinimumElements(filteredResults):
         elif(filteredResults[key]==minValue):
             minElements.append(key.split("--")[1].strip())
     return (maxElements,minElements)
+
+"""
+Given a list of data, it gets binned up.
+"""
+def binUpData(data):
+    bins = range(0,101)
+    binValues = [0] * 101
+    for value in data:
+        binValues[value] += 1
+    return (bins,binValues)
