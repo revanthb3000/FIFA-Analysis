@@ -54,6 +54,7 @@ def plotCurves(fifaVersion):
 def main():
 #     simpleRun()
     plotCurves(15)
+    plotCurves(14)
 
     return
 
