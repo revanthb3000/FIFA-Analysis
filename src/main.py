@@ -62,10 +62,12 @@ def plotCurves(fifaVersion):
         getGoalkeeperAttributePlot(attribute, fifaVersion)
 
 def main():
-    plotCurves(15)
-    plotCurves(14)
-    plotCurves(13)
-    plotCurves(12)
+    connection = databaseQueries.getDatabaseConnection("15.db")
+    cursor = databaseQueries.getConnectionCursor(connection)
+    result = databaseQueries.getTopPlayersByPosition(cursor, "CM", 20);
+    for player in result:
+        print player["Name"] + " " + str(player["Player_Rating"]) 
+    databaseQueries.closeDatabaseConnection(connection)
     return
 
 if __name__ == '__main__':
