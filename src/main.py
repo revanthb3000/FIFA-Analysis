@@ -62,7 +62,7 @@ def plotCurves(fifaVersion):
         getGoalkeeperAttributePlot(attribute, fifaVersion)
 
 def filterExample(cursor, filterParameters):
-    result = databaseQueries.getTopPlayers(cursor, filterParameters, "Player_Rating", 10);
+    result = databaseQueries.getTopPlayers(cursor, filterParameters, "Player_Rating", 10)
     for player in result:
         print player["Name"] + " " + str(player["Player_Rating"]) 
 

@@ -56,6 +56,31 @@ def getTopPlayersByPosition(cursor, position, sortParameter, numberOfPlayers):
     return rows
 
 """
+Given a dictionary of the form {"Parameter>" : value}, this function returns the desired results.
+
+Example : 
+filterParameters = {"league=" : "'Barclays PL'",
+                    "position=" : "'ST'", "Foot=" : "'Right'",
+                    "skills>=" : 3, "weak_foot>=" : 3}
+Basically, we're looking for right footed strikers with 3 star or greater weak foot and skills and who play in the BPL.
+So, for the call databaseQueries.getTopPlayers(cursor, filterParameters, "Player_Rating", 10), the results are :
+
+------------------------------
+Player            |    Rating
+------------------------------
+Falcao            |    88
+Sergio Agüero     |    87
+Sergio Agüero     |    86
+Diego Costa       |    86
+Wayne Rooney      |    86
+Diego Costa       |    85
+Edin Džeko        |    84
+Edin Džeko        |    83
+Mario Balotelli   |    82
+Samuel Eto'o      |    81
+------------------------------
+
+Dzeko and Aguero appear twice because of their In-Forms.
 """
 def getTopPlayers(cursor, filterParameters, sortParameter, numberOfPlayers):
     query = "Select * from PlayerInfo JOIN PlayerStats ON PlayerInfo.pid = PlayerStats.pid WHERE "
