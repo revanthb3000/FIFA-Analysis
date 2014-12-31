@@ -38,24 +38,6 @@ def getAllGoalKeeperStats(cursor):
     return rows
 
 """
-Given a position, this function returns the top 'numberOfPlayers' players of that position.
-Example : getTopPlayersByPosition(cursor, "CM", 5, Player_Rating) returns : 
-
-Ruud Gullit 90
-Iniesta 89
-Roy Keane 88
-Patrick Vieira 88
-Bastian Schweinsteiger 88
-"""
-def getTopPlayersByPosition(cursor, position, sortParameter, numberOfPlayers):
-    cursor.execute("Select * from PlayerInfo JOIN PlayerStats ON PlayerInfo.pid = PlayerStats.pid WHERE "\
-                    + "PlayerInfo.position = '" + position + "' ORDER BY PlayerStats." + sortParameter + " DESC LIMIT " + str(numberOfPlayers) + ";")
-    rows = []
-    for row in cursor.fetchall():
-        rows.append(row)
-    return rows
-
-"""
 Given a dictionary of the form {"Parameter>" : value}, this function returns the desired results.
 
 Example : 
