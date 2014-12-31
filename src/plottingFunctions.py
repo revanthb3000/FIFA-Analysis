@@ -9,7 +9,7 @@ import utilityFunctions
 Given a dictionary of <playerId -- playerName, attributeValue>, this function computes the mean, standard deviation, maximum, minimum and plots the graph.
 A normal distribution is expected.
 """
-def plotDistribution(filteredResults, attribute, fifaVersion):
+def plotDistribution(filteredResults, attribute, fifaVersion, fileName):
     t = utilityFunctions.getMaximumAndMinimumElements(filteredResults)
     maximumElements = t[0]
     minimumElements = t[1]
@@ -35,4 +35,4 @@ def plotDistribution(filteredResults, attribute, fifaVersion):
     binnedData = utilityFunctions.binUpData(data)
     plt.plot(binnedData[0],binnedData[1])
 
-    plt.savefig("plots/" + str(fifaVersion) + "/" + attribute + ".png")
+    plt.savefig(fileName)

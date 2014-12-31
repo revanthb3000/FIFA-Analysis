@@ -6,37 +6,43 @@ import utilityFunctions
 import plottingFunctions
 
 """
-A sample run of connecting to the database.
+Given an outfield player attribute and a fifaVersion, this function obtains a basic plot of the distribution of values.
 """
-def simpleRun():
-    connection = databaseQueries.getDatabaseConnection("15.db")
-    cursor = databaseQueries.getConnectionCursor(connection)
-    results = databaseQueries.getAllPlayerStats(cursor)
-    cnt = 0
-    for result in results:
-        print result.keys()
-        print result
-        cnt += 1
-        if(cnt > 100):
-            break
-    databaseQueries.closeDatabaseConnection(connection)
-
-"""
-Given an attribute and a fifaVersion, this function obtains a basic plot of the distribution of values.
-"""
-def getAttributePlot(attribute, fifaVersion):
+def getOutfieldAttributePlot(attribute, fifaVersion):
     connection = databaseQueries.getDatabaseConnection(str(fifaVersion)  + ".db")
     cursor = databaseQueries.getConnectionCursor(connection)
+    
     results = databaseQueries.getAllPlayerStats(cursor)
     filteredResults = utilityFunctions.getPlayerAttributeMapping(results, attribute)
-#     print filteredResults
-    plottingFunctions.plotDistribution(filteredResults, attribute, fifaVersion)
+    
+    fileName = "plots/" + str(fifaVersion) + "/outfieldPlayers/" + attribute + ".png"
+    plottingFunctions.plotDistribution(filteredResults, attribute, fifaVersion, fileName)
+    
     databaseQueries.closeDatabaseConnection(connection)
 
+"""
+Given a goalkepper player attribute and a fifaVersion, this function obtains a basic plot of the distribution of values.
+"""
+def getGoalkeeperAttributePlot(attribute, fifaVersion):
+    connection = databaseQueries.getDatabaseConnection(str(fifaVersion)  + ".db")
+    cursor = databaseQueries.getConnectionCursor(connection)
+    
+    results = databaseQueries.getAllGoalKeeperStats(cursor)
+    filteredResults = utilityFunctions.getPlayerAttributeMapping(results, attribute)
+    
+    fileName = "plots/" + str(fifaVersion) + "/goalKeepers/" + attribute + ".png"
+    plottingFunctions.plotDistribution(filteredResults, attribute, fifaVersion, fileName)
+    
+    databaseQueries.closeDatabaseConnection(connection)
+
+"""
+For a given FIFA version, this function will create plots for each of the stats for both outfield players and goalkeepers.
+"""
 def plotCurves(fifaVersion):
     finalBaseAttribute = "HEA"
     if(fifaVersion == 15):
         finalBaseAttribute = "PHY"
+        
     playerStatsFields = ["PAC","SHO","PAS","DRI",
                         "DEF",finalBaseAttribute,"Ball_Control", 
                         "Crossing", "Curve", "Dribbling", "Finishing", 
@@ -46,16 +52,20 @@ def plotCurves(fifaVersion):
                         "Acceleration", "Agility", "Balance","Jumping", "Reactions", 
                         "Sprint_Speed", "Stamina","Strength", "Aggression", "Positioning", 
                         "Interceptions","Vision", "Player_Rating"]
+    
+    goalkeeperStatsFields = ["GK_DIV", "HAN", "KIC", "REF", "SPE", "POS", "Player_Rating"]
 
     for attribute in playerStatsFields:
-        getAttributePlot(attribute, fifaVersion)
+        getOutfieldAttributePlot(attribute, fifaVersion)
         
+    for attribute in goalkeeperStatsFields:
+        getGoalkeeperAttributePlot(attribute, fifaVersion)
 
 def main():
-#     simpleRun()
     plotCurves(15)
     plotCurves(14)
-
+    plotCurves(13)
+    plotCurves(12)
     return
 
 if __name__ == '__main__':

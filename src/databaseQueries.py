@@ -25,4 +25,8 @@ def getAllPlayerStats(cursor):
     return rows
 
 def getAllGoalKeeperStats(cursor):
-    return
+    cursor.execute("Select * from PlayerInfo JOIN GoalkeeperStats ON PlayerInfo.pid = GoalkeeperStats.pid;")
+    rows = []
+    for row in cursor.fetchall():
+        rows.append(row)
+    return rows
