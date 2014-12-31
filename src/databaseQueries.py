@@ -63,27 +63,31 @@ filterParameters = {"league=" : "'Barclays PL'",
                     "position=" : "'ST'", "Foot=" : "'Right'",
                     "skills>=" : 3, "weak_foot>=" : 3}
 Basically, we're looking for right footed strikers with 3 star or greater weak foot and skills and who play in the BPL.
-So, for the call databaseQueries.getTopPlayers(cursor, filterParameters, "Player_Rating", 10), the results are :
+So, for the call databaseQueries.getTopPlayers(cursor, filterParameters, "Player_Rating", 10, False), the results are :
 
 ------------------------------
 Player            |    Rating
 ------------------------------
 Falcao            |    88
-Sergio Agüero     |    87
-Sergio Agüero     |    86
+Sergio Aguero     |    87
+Sergio Aguero     |    86
 Diego Costa       |    86
 Wayne Rooney      |    86
 Diego Costa       |    85
-Edin Džeko        |    84
-Edin Džeko        |    83
+Edin Dzeko        |    84
+Edin Dzeko        |    83
 Mario Balotelli   |    82
 Samuel Eto'o      |    81
 ------------------------------
 
 Dzeko and Aguero appear twice because of their In-Forms.
 """
-def getTopPlayers(cursor, filterParameters, sortParameter, numberOfPlayers):
-    query = "Select * from PlayerInfo JOIN PlayerStats ON PlayerInfo.pid = PlayerStats.pid WHERE "
+def getTopPlayers(cursor, filterParameters, sortParameter, numberOfPlayers, ignoreSpecialCards = True):
+    query = ""
+    if(ignoreSpecialCards):
+        query = "Select * from (Select MIN(pid) as minPid, * from PlayerInfo GROUP BY Full_Name) PlayerInfo JOIN PlayerStats ON PlayerInfo.minPid = PlayerStats.pid WHERE "
+    else:
+        query = "Select * from PlayerInfo JOIN PlayerStats ON PlayerInfo.pid = PlayerStats.pid WHERE "
     
     filterQuery = ""
     keys = filterParameters.keys()
