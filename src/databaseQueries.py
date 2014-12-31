@@ -59,9 +59,9 @@ def getTopPlayersByPosition(cursor, position, sortParameter, numberOfPlayers):
 Given a dictionary of the form {"Parameter>" : value}, this function returns the desired results.
 
 Example : 
-filterParameters = {"league=" : "'Barclays PL'",
-                    "position=" : "'ST'", "Foot=" : "'Right'",
-                    "skills>=" : 3, "weak_foot>=" : 3}
+filterParameters = {"PlayerInfo.league=" : "'Barclays PL'",
+                    "PlayerInfo.position=" : "'ST'", "PlayerInfo.Foot=" : "'Right'",
+                    "PlayerInfo.skills>=" : 3, "PlayerInfo.weak_foot>=" : 3}
 Basically, we're looking for right footed strikers with 3 star or greater weak foot and skills and who play in the BPL.
 So, for the call databaseQueries.getTopPlayers(cursor, filterParameters, "Player_Rating", 10, False), the results are :
 
@@ -87,15 +87,15 @@ However, if you set ignoreSpecialCards to True, you get :
 Player            |    Rating
 ------------------------------
 Falcao            |    88
-Sergio Agüero     |    86
+Sergio Aguero     |    86
 Wayne Rooney      |    86
 Diego Costa       |    85
-Edin Džeko        |    83
+Edin Dzeko        |    83
 Mario Balotelli   |    82
 Didier Drogba     |    81
 Soldado           |    81
 Samuel Eto'o      |    81
-Stevan Jovetić    |    81
+Stevan Jovetic    |    81
 ------------------------------
 
 """
@@ -111,7 +111,7 @@ def getTopPlayers(cursor, filterParameters, sortParameter, numberOfPlayers, igno
     cnt = 0
     while(cnt < len(keys)):
         key = keys[cnt]
-        filterQuery += "PlayerInfo." + key + str(filterParameters[key])
+        filterQuery += key + str(filterParameters[key])
         if(cnt != (len(keys) - 1)):
             filterQuery += " AND "
         cnt += 1

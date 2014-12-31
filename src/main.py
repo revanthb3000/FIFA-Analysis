@@ -71,27 +71,33 @@ def main():
     cursor = databaseQueries.getConnectionCursor(connection)
 
     print "\nTest #1 : "
-    filterParameters = {"club=" : "'Manchester Utd'", "league=" : "'Barclays PL'", "nation=" : "'England'",
-                        "position=" : "'ST'", "Foot=" : "'Right'", "attack_WR=" : "'High'", "defense_WR=" : "'High'",
-                        "skills>=" : 3, "weak_foot>=" : 3}
+    filterParameters = {"PlayerInfo.club=" : "'Manchester Utd'", "PlayerInfo.league=" : "'Barclays PL'", "PlayerInfo.nation=" : "'England'",
+                        "PlayerInfo.position=" : "'ST'", "PlayerInfo.Foot=" : "'Right'", "PlayerInfo.attack_WR=" : "'High'", "PlayerInfo.defense_WR=" : "'High'",
+                        "PlayerInfo.skills>=" : 3, "PlayerInfo.weak_foot>=" : 3}
     filterExample(cursor, filterParameters)
 
     print "\nTest #2 : "
-    filterParameters = {"club=" : "'Manchester Utd'", "league=" : "'Barclays PL'",
-                        "position=" : "'ST'", "Foot=" : "'Left'",
-                        "skills>=" : 3, "weak_foot>=" : 3}
+    filterParameters = {"PlayerInfo.club=" : "'Manchester Utd'", "PlayerInfo.league=" : "'Barclays PL'",
+                        "PlayerInfo.position=" : "'ST'", "PlayerInfo.Foot=" : "'Left'",
+                        "PlayerInfo.skills>=" : 3, "PlayerInfo.weak_foot>=" : 3}
     filterExample(cursor, filterParameters)
     
     print "\nTest #3 : "
-    filterParameters = {"club=" : "'Manchester Utd'", "league=" : "'Barclays PL'",
-                        "position=" : "'ST'", "Foot=" : "'Right'",
-                        "skills>=" : 3, "weak_foot>=" : 3}
+    filterParameters = {"PlayerInfo.club=" : "'Manchester Utd'", "PlayerInfo.league=" : "'Barclays PL'",
+                        "PlayerInfo.position=" : "'ST'", "PlayerInfo.Foot=" : "'Right'",
+                        "PlayerInfo.skills>=" : 3, "PlayerInfo.weak_foot>=" : 3}
     filterExample(cursor, filterParameters)
 
     print "\nTest #4 : "
-    filterParameters = {"league=" : "'Barclays PL'",
-                        "position=" : "'ST'", "Foot=" : "'Right'",
-                        "skills>=" : 3, "weak_foot>=" : 3}
+    filterParameters = {"PlayerInfo.league=" : "'Barclays PL'",
+                        "PlayerInfo.position=" : "'ST'", "PlayerInfo.Foot=" : "'Right'",
+                        "PlayerInfo.skills>=" : 3, "PlayerInfo.weak_foot>=" : 3}
+    filterExample(cursor, filterParameters)
+    
+    print "\nTest #5 : "
+    filterParameters = {"PlayerInfo.league=" : "'Barclays PL'",
+                        "PlayerInfo.position=" : "'ST'", "PlayerInfo.Foot=" : "'Right'",
+                        "PlayerInfo.skills>=" : 3, "PlayerInfo.weak_foot>=" : 3, "PlayerStats.PAC>=" : 80}
     filterExample(cursor, filterParameters)
     
     databaseQueries.closeDatabaseConnection(connection)
