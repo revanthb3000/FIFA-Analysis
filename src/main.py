@@ -67,6 +67,11 @@ def filterExample(cursor, filterParameters):
         print player["Name"] + " " + str(player["Player_Rating"]) 
 
 def main():
+#     plotCurves(15)
+#     plotCurves(14)
+#     plotCurves(13)
+#     plotCurves(12)
+    
     connection = databaseQueries.getDatabaseConnection("15.db")
     cursor = databaseQueries.getConnectionCursor(connection)
 

@@ -29,6 +29,8 @@ def plotDistribution(filteredResults, attribute, fifaVersion, fileName):
     
     plt.figure()
     
+    plt.title(attribute + " plot for FIFA " + str(fifaVersion))
+    
     plt.xlabel(attribute)
     plt.ylabel("Number of players with given value")
 
