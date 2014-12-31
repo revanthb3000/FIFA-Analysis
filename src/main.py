@@ -61,27 +61,39 @@ def plotCurves(fifaVersion):
     for attribute in goalkeeperStatsFields:
         getGoalkeeperAttributePlot(attribute, fifaVersion)
 
+def filterExample(cursor, filterParameters):
+    result = databaseQueries.getTopPlayers(cursor, filterParameters, "Player_Rating", 10);
+    for player in result:
+        print player["Name"] + " " + str(player["Player_Rating"]) 
+
 def main():
     connection = databaseQueries.getDatabaseConnection("15.db")
     cursor = databaseQueries.getConnectionCursor(connection)
 
+    print "\nTest #1 : "
     filterParameters = {"club=" : "'Manchester Utd'", "league=" : "'Barclays PL'", "nation=" : "'England'",
                         "position=" : "'ST'", "Foot=" : "'Right'", "attack_WR=" : "'High'", "defense_WR=" : "'High'",
                         "skills>=" : 3, "weak_foot>=" : 3}
+    filterExample(cursor, filterParameters)
 
-    result = databaseQueries.getTopPlayers(cursor, filterParameters, "Player_Rating", 10);
-    for player in result:
-        print player["Name"] + " " + str(player["Player_Rating"]) 
-
-
+    print "\nTest #2 : "
     filterParameters = {"club=" : "'Manchester Utd'", "league=" : "'Barclays PL'",
                         "position=" : "'ST'", "Foot=" : "'Left'",
                         "skills>=" : 3, "weak_foot>=" : 3}
+    filterExample(cursor, filterParameters)
+    
+    print "\nTest #3 : "
+    filterParameters = {"club=" : "'Manchester Utd'", "league=" : "'Barclays PL'",
+                        "position=" : "'ST'", "Foot=" : "'Right'",
+                        "skills>=" : 3, "weak_foot>=" : 3}
+    filterExample(cursor, filterParameters)
 
-    result = databaseQueries.getTopPlayers(cursor, filterParameters, "Player_Rating", 10);
-    for player in result:
-        print player["Name"] + " " + str(player["Player_Rating"]) 
-
+    print "\nTest #4 : "
+    filterParameters = {"league=" : "'Barclays PL'",
+                        "position=" : "'ST'", "Foot=" : "'Right'",
+                        "skills>=" : 3, "weak_foot>=" : 3}
+    filterExample(cursor, filterParameters)
+    
     databaseQueries.closeDatabaseConnection(connection)
     return
 

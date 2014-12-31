@@ -71,7 +71,6 @@ def getTopPlayers(cursor, filterParameters, sortParameter, numberOfPlayers):
         cnt += 1
     
     query = query + filterQuery + " ORDER BY PlayerStats." + sortParameter + " DESC LIMIT " + str(numberOfPlayers) + ";"
-    print query
     
     cursor.execute(query)
     rows = []
