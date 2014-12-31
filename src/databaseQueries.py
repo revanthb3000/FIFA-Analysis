@@ -81,6 +81,23 @@ Samuel Eto'o      |    81
 ------------------------------
 
 Dzeko and Aguero appear twice because of their In-Forms.
+
+However, if you set ignoreSpecialCards to True, you get : 
+------------------------------
+Player            |    Rating
+------------------------------
+Falcao            |    88
+Sergio Agüero     |    86
+Wayne Rooney      |    86
+Diego Costa       |    85
+Edin Džeko        |    83
+Mario Balotelli   |    82
+Didier Drogba     |    81
+Soldado           |    81
+Samuel Eto'o      |    81
+Stevan Jovetić    |    81
+------------------------------
+
 """
 def getTopPlayers(cursor, filterParameters, sortParameter, numberOfPlayers, ignoreSpecialCards = True):
     query = ""
