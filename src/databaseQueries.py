@@ -39,18 +39,41 @@ def getAllGoalKeeperStats(cursor):
 
 """
 Given a position, this function returns the top 'numberOfPlayers' players of that position.
-Example : getTopPlayersByPosition(cursor, "CM", 5) returns : 
+Example : getTopPlayersByPosition(cursor, "CM", 5, Player_Rating) returns : 
 
 Ruud Gullit 90
 Iniesta 89
 Roy Keane 88
 Patrick Vieira 88
 Bastian Schweinsteiger 88
+"""
+def getTopPlayersByPosition(cursor, position, sortParameter, numberOfPlayers):
+    cursor.execute("Select * from PlayerInfo JOIN PlayerStats ON PlayerInfo.pid = PlayerStats.pid WHERE "\
+                    + "PlayerInfo.position = '" + position + "' ORDER BY PlayerStats." + sortParameter + " DESC LIMIT " + str(numberOfPlayers) + ";")
+    rows = []
+    for row in cursor.fetchall():
+        rows.append(row)
+    return rows
 
 """
-def getTopPlayersByPosition(cursor, position, numberOfPlayers):
-    cursor.execute("Select * from PlayerInfo JOIN PlayerStats ON PlayerInfo.pid = PlayerStats.pid WHERE "\
-                    + "PlayerInfo.position = '" + position + "' ORDER BY PlayerStats.Player_Rating DESC LIMIT " + str(numberOfPlayers) + ";")
+"""
+def getTopPlayers(cursor, filterParameters, sortParameter, numberOfPlayers):
+    query = "Select * from PlayerInfo JOIN PlayerStats ON PlayerInfo.pid = PlayerStats.pid WHERE "
+    
+    filterQuery = ""
+    keys = filterParameters.keys()
+    cnt = 0
+    while(cnt < len(keys)):
+        key = keys[cnt]
+        filterQuery += "PlayerInfo." + key + str(filterParameters[key])
+        if(cnt != (len(keys) - 1)):
+            filterQuery += " AND "
+        cnt += 1
+    
+    query = query + filterQuery + " ORDER BY PlayerStats." + sortParameter + " DESC LIMIT " + str(numberOfPlayers) + ";"
+    print query
+    
+    cursor.execute(query)
     rows = []
     for row in cursor.fetchall():
         rows.append(row)

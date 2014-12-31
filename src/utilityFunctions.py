@@ -1,7 +1,6 @@
 """
 This function will contain all functions that will be frequently used.
 """
-import numpy
 
 def getPlayerAttributeMapping(results, attribute):
     filteredResults = {}

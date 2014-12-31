@@ -64,9 +64,24 @@ def plotCurves(fifaVersion):
 def main():
     connection = databaseQueries.getDatabaseConnection("15.db")
     cursor = databaseQueries.getConnectionCursor(connection)
-    result = databaseQueries.getTopPlayersByPosition(cursor, "CM", 20);
+
+    filterParameters = {"club=" : "'Manchester Utd'", "league=" : "'Barclays PL'", "nation=" : "'England'",
+                        "position=" : "'ST'", "Foot=" : "'Right'", "attack_WR=" : "'High'", "defense_WR=" : "'High'",
+                        "skills>=" : 3, "weak_foot>=" : 3}
+
+    result = databaseQueries.getTopPlayers(cursor, filterParameters, "Player_Rating", 10);
     for player in result:
         print player["Name"] + " " + str(player["Player_Rating"]) 
+
+
+    filterParameters = {"club=" : "'Manchester Utd'", "league=" : "'Barclays PL'",
+                        "position=" : "'ST'", "Foot=" : "'Left'",
+                        "skills>=" : 3, "weak_foot>=" : 3}
+
+    result = databaseQueries.getTopPlayers(cursor, filterParameters, "Player_Rating", 10);
+    for player in result:
+        print player["Name"] + " " + str(player["Player_Rating"]) 
+
     databaseQueries.closeDatabaseConnection(connection)
     return
 
