@@ -118,6 +118,7 @@ def teamFilterExamples(cursor):
     newConstraint["PlayerStats.SHO>="] = 90
     filterParametersList.append(newConstraint)
     
+    print "4-4-2 Diamond : "
     getFilteredTeam(cursor, filterParametersList)
 
 """

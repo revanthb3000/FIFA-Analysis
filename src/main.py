@@ -4,6 +4,7 @@ This will be the main function where everything starts off.
 import databaseQueries
 import plottingFunctions
 import exampleFilters
+import formations
 
 def getTeam(filterParameters):
     return
@@ -17,7 +18,9 @@ def main():
     connection = databaseQueries.getDatabaseConnection("15.db")
     cursor = databaseQueries.getConnectionCursor(connection)
     
-#     exampleFilters.playerFilterExamples(cursor)
+    exampleFilters.playerFilterExamples(cursor)
+    
+    print "\nTeam Example : \n"
     exampleFilters.teamFilterExamples(cursor)
     
     databaseQueries.closeDatabaseConnection(connection)
