@@ -17,7 +17,8 @@ def main():
     connection = databaseQueries.getDatabaseConnection("15.db")
     cursor = databaseQueries.getConnectionCursor(connection)
     
-    exampleFilters.filterExamples(cursor)
+#     exampleFilters.playerFilterExamples(cursor)
+    exampleFilters.teamFilterExamples(cursor)
     
     databaseQueries.closeDatabaseConnection(connection)
     return

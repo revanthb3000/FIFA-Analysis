@@ -45,7 +45,7 @@ filterParameters = {"PlayerInfo.league=" : "'Barclays PL'",
                     "PlayerInfo.position=" : "'ST'", "PlayerInfo.Foot=" : "'Right'",
                     "PlayerInfo.skills>=" : 3, "PlayerInfo.weak_foot>=" : 3}
 Basically, we're looking for right footed strikers with 3 star or greater weak foot and skills and who play in the BPL.
-So, for the call databaseQueries.getTopPlayers(cursor, filterParameters, "Player_Rating", 10, False, []), the results are :
+So, for the call databaseQueries.getTopOutfieldPlayers(cursor, filterParameters, "Player_Rating", 10, False, []), the results are :
 
 ------------------------------
 Player            |    Rating
@@ -81,7 +81,7 @@ Stevan Jovetic    |    81
 ------------------------------
 
 """
-def getTopPlayers(cursor, filterParameters, sortParameter, numberOfPlayers, ignoreSpecialCards = True, ignoredPidList = []):
+def getTopOutfieldPlayers(cursor, filterParameters, sortParameter, numberOfPlayers, ignoreSpecialCards = True, ignoredPidList = []):
     query = ""
     if(ignoreSpecialCards):
         query = "Select * from (Select MIN(pid) as minPid, * from PlayerInfo GROUP BY Full_Name) PlayerInfo JOIN PlayerStats ON PlayerInfo.minPid = PlayerStats.pid WHERE "
@@ -104,3 +104,52 @@ def getTopPlayers(cursor, filterParameters, sortParameter, numberOfPlayers, igno
     for row in cursor.fetchall():
         rows.append(row)
     return rows
+
+"""
+Same as the above query, but for goalkeepers.
+"""
+def getTopGoalKeepers(cursor, filterParameters, sortParameter, numberOfPlayers, ignoreSpecialCards = True, ignoredPidList = []):
+    query = ""
+    if(ignoreSpecialCards):
+        query = "Select * from (Select MIN(pid) as minPid, * from PlayerInfo GROUP BY Full_Name) PlayerInfo JOIN GoalkeeperStats ON PlayerInfo.minPid = GoalkeeperStats.pid WHERE "
+    else:
+        query = "Select * from PlayerInfo JOIN GoalkeeperStats ON PlayerInfo.pid = GoalkeeperStats.pid WHERE "
+    
+    filterQuery = "PlayerInfo.pid NOT IN (" + str(ignoredPidList) + ")"
+    filterQuery = filterQuery.replace("([","(").replace("])",")")
+    keys = filterParameters.keys()
+    cnt = 0
+    while(cnt < len(keys)):
+        key = keys[cnt]
+        filterQuery += " AND " + key + str(filterParameters[key])
+        cnt += 1
+    
+    query = query + filterQuery + " ORDER BY GoalkeeperStats." + sortParameter + " DESC LIMIT " + str(numberOfPlayers) + ";"
+    
+    cursor.execute(query)
+    rows = []
+    for row in cursor.fetchall():
+        rows.append(row)
+    return rows
+
+"""
+Given a filterParameters List, this function will construct the best team !
+"""
+def getTeam(cursor, filterParametersList, sortParameter = "Player_Rating", ignoreSpecialCards = True):
+    ignoredPlayersList = []
+    team = []
+    for filterParameters in filterParametersList:
+        player = None
+        if("'GK'" in filterParameters.values()):
+            player = getTopGoalKeepers(cursor, filterParameters, sortParameter, 1, ignoreSpecialCards, ignoredPlayersList)
+        else:
+            player = getTopOutfieldPlayers(cursor, filterParameters, sortParameter, 1, ignoreSpecialCards, ignoredPlayersList)
+        if(player == []):
+            print "No player found for : "
+            print filterParameters
+            continue
+        playerId = player[0]["pid"]
+        ignoredPlayersList.append(playerId) #Player can't appear in a team twice.
+        team.append(player[0])
+    return team
+    
