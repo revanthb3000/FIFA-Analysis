@@ -45,7 +45,7 @@ filterParameters = {"PlayerInfo.league=" : "'Barclays PL'",
                     "PlayerInfo.position=" : "'ST'", "PlayerInfo.Foot=" : "'Right'",
                     "PlayerInfo.skills>=" : 3, "PlayerInfo.weak_foot>=" : 3}
 Basically, we're looking for right footed strikers with 3 star or greater weak foot and skills and who play in the BPL.
-So, for the call databaseQueries.getTopPlayers(cursor, filterParameters, "Player_Rating", 10, False), the results are :
+So, for the call databaseQueries.getTopPlayers(cursor, filterParameters, "Player_Rating", 10, False, []), the results are :
 
 ------------------------------
 Player            |    Rating
@@ -81,21 +81,20 @@ Stevan Jovetic    |    81
 ------------------------------
 
 """
-def getTopPlayers(cursor, filterParameters, sortParameter, numberOfPlayers, ignoreSpecialCards = True):
+def getTopPlayers(cursor, filterParameters, sortParameter, numberOfPlayers, ignoreSpecialCards = True, ignoredPidList = []):
     query = ""
     if(ignoreSpecialCards):
         query = "Select * from (Select MIN(pid) as minPid, * from PlayerInfo GROUP BY Full_Name) PlayerInfo JOIN PlayerStats ON PlayerInfo.minPid = PlayerStats.pid WHERE "
     else:
         query = "Select * from PlayerInfo JOIN PlayerStats ON PlayerInfo.pid = PlayerStats.pid WHERE "
     
-    filterQuery = ""
+    filterQuery = "PlayerInfo.pid NOT IN (" + str(ignoredPidList) + ")"
+    filterQuery = filterQuery.replace("([","(").replace("])",")")
     keys = filterParameters.keys()
     cnt = 0
     while(cnt < len(keys)):
         key = keys[cnt]
-        filterQuery += key + str(filterParameters[key])
-        if(cnt != (len(keys) - 1)):
-            filterQuery += " AND "
+        filterQuery += " AND " + key + str(filterParameters[key])
         cnt += 1
     
     query = query + filterQuery + " ORDER BY PlayerStats." + sortParameter + " DESC LIMIT " + str(numberOfPlayers) + ";"
