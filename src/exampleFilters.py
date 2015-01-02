@@ -2,28 +2,7 @@
 This is a file where I just put in examples and play around with the functions.
 A test bed of sorts.
 """
-
-import databaseQueries
-
-"""
-Basic function that calls the required database query and prints the result
-"""
-def getFilteredTeam(cursor, filterParametersList):
-    team = databaseQueries.getTeam(cursor, filterParametersList)
-    for player in team:
-        print str(player["Player_Rating"]) + " - " + player["Name"]
-
-"""
-Basic function that calls the database query for player filters and prints the result
-"""
-def getFilteredPlayers(cursor, filterParameters, ignoredPlayers = [], isGoalKeeper = False):
-    result = None
-    if(not(isGoalKeeper)):
-        result = databaseQueries.getTopOutfieldPlayers(cursor, filterParameters, "Player_Rating", 10, True, ignoredPlayers)
-    else:
-        result = databaseQueries.getTopGoalKeepers(cursor, filterParameters, "Player_Rating", 10, True, ignoredPlayers)
-    for player in result:
-        print str(player["pid"]) + " " + player["Name"] + " " + str(player["Player_Rating"]) 
+import utilityFunctions
 
 """
 Just a couple of examples on how to generate a team for constraints.
@@ -119,7 +98,7 @@ def teamFilterExamples(cursor):
     filterParametersList.append(newConstraint)
     
     print "4-4-2 Diamond : "
-    getFilteredTeam(cursor, filterParametersList)
+    utilityFunctions.getFilteredTeam(cursor, filterParametersList)
 
 """
 Several examples on how to use filters to find top players for a criteria.
@@ -129,36 +108,36 @@ def playerFilterExamples(cursor):
     filterParameters = {"PlayerInfo.club=" : "'Manchester Utd'", "PlayerInfo.league=" : "'Barclays PL'", "PlayerInfo.nation=" : "'England'",
                         "PlayerInfo.position=" : "'ST'", "PlayerInfo.Foot=" : "'Right'", "PlayerInfo.attack_WR=" : "'High'", "PlayerInfo.defense_WR=" : "'High'",
                         "PlayerInfo.skills>=" : 3, "PlayerInfo.weak_foot>=" : 3}
-    getFilteredPlayers(cursor, filterParameters)
+    utilityFunctions.getFilteredPlayers(cursor, filterParameters)
 
     print "\nTest #2 : "
     filterParameters = {"PlayerInfo.club=" : "'Manchester Utd'", "PlayerInfo.league=" : "'Barclays PL'",
                         "PlayerInfo.position=" : "'ST'", "PlayerInfo.Foot=" : "'Left'",
                         "PlayerInfo.skills>=" : 3, "PlayerInfo.weak_foot>=" : 3}
-    getFilteredPlayers(cursor, filterParameters)
+    utilityFunctions.getFilteredPlayers(cursor, filterParameters)
     
     print "\nTest #3 : "
     filterParameters = {"PlayerInfo.club=" : "'Manchester Utd'", "PlayerInfo.league=" : "'Barclays PL'",
                         "PlayerInfo.position=" : "'ST'", "PlayerInfo.Foot=" : "'Right'",
                         "PlayerInfo.skills>=" : 3, "PlayerInfo.weak_foot>=" : 3}
-    getFilteredPlayers(cursor, filterParameters)
+    utilityFunctions.getFilteredPlayers(cursor, filterParameters)
 
     ignorePlayers = [45] #Sergio Aguero is ignored.
     print "\nTest #4 : "
     filterParameters = {"PlayerInfo.league=" : "'Barclays PL'",
                         "PlayerInfo.position IN " : "('ST','CF','LM')", "PlayerInfo.Foot=" : "'Right'",
                         "PlayerInfo.skills>=" : 3, "PlayerInfo.weak_foot>=" : 3}
-    getFilteredPlayers(cursor, filterParameters, ignorePlayers)
+    utilityFunctions.getFilteredPlayers(cursor, filterParameters, ignorePlayers)
     
     print "\nTest #5 : "
     filterParameters = {"PlayerInfo.league=" : "'Barclays PL'",
                         "PlayerInfo.position=" : "'ST'", "PlayerInfo.Foot=" : "'Right'",
                         "PlayerInfo.skills>=" : 3, "PlayerInfo.weak_foot>=" : 3, "PlayerStats.PAC>=" : 80}
-    getFilteredPlayers(cursor, filterParameters)
+    utilityFunctions.getFilteredPlayers(cursor, filterParameters)
     
     print "\nTest #6 : "
     filterParameters = {"PlayerInfo.league=" : "'Barclays PL'",
                         "PlayerInfo.position=" : "'GK'", "PlayerInfo.Foot=" : "'Right'",
                         "GoalkeeperStats.REF>=" : 85}
-    getFilteredPlayers(cursor, filterParameters, isGoalKeeper = True)
+    utilityFunctions.getFilteredPlayers(cursor, filterParameters, isGoalKeeper = True)
     

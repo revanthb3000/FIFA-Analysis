@@ -81,7 +81,7 @@ Stevan Jovetic    |    81
 ------------------------------
 
 """
-def getTopOutfieldPlayers(cursor, filterParameters, sortParameter, numberOfPlayers, ignoreSpecialCards = True, ignoredPidList = []):
+def getTopOutfieldPlayers(cursor, filterParameters, sortParameter, numberOfPlayers, ignoreSpecialCards = True, ignoredPidList = [], ignoreLegends = True):
     query = ""
     if(ignoreSpecialCards):
         query = "Select * from (Select MIN(pid) as minPid, * from PlayerInfo GROUP BY Full_Name) PlayerInfo JOIN PlayerStats ON PlayerInfo.minPid = PlayerStats.pid WHERE "
@@ -90,6 +90,9 @@ def getTopOutfieldPlayers(cursor, filterParameters, sortParameter, numberOfPlaye
     
     filterQuery = "PlayerInfo.pid NOT IN (" + str(ignoredPidList) + ")"
     filterQuery = filterQuery.replace("([","(").replace("])",")")
+    if(ignoreLegends):
+        filterQuery += " AND PlayerInfo.League <> 'Legends'"
+        
     keys = filterParameters.keys()
     cnt = 0
     while(cnt < len(keys)):
@@ -108,7 +111,7 @@ def getTopOutfieldPlayers(cursor, filterParameters, sortParameter, numberOfPlaye
 """
 Same as the above query, but for goalkeepers.
 """
-def getTopGoalKeepers(cursor, filterParameters, sortParameter, numberOfPlayers, ignoreSpecialCards = True, ignoredPidList = []):
+def getTopGoalKeepers(cursor, filterParameters, sortParameter, numberOfPlayers, ignoreSpecialCards = True, ignoredPidList = [], ignoreLegends = True):
     query = ""
     if(ignoreSpecialCards):
         query = "Select * from (Select MIN(pid) as minPid, * from PlayerInfo GROUP BY Full_Name) PlayerInfo JOIN GoalkeeperStats ON PlayerInfo.minPid = GoalkeeperStats.pid WHERE "
@@ -117,6 +120,8 @@ def getTopGoalKeepers(cursor, filterParameters, sortParameter, numberOfPlayers, 
     
     filterQuery = "PlayerInfo.pid NOT IN (" + str(ignoredPidList) + ")"
     filterQuery = filterQuery.replace("([","(").replace("])",")")
+    if(ignoreLegends):
+        filterQuery += " AND PlayerInfo.League <> 'Legends'"
     keys = filterParameters.keys()
     cnt = 0
     while(cnt < len(keys)):
