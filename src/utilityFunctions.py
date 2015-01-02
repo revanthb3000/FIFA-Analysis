@@ -120,9 +120,9 @@ What's the attribute ? stop
 87 - Philipp Lahm
 85 - Sergio Busquets
 92 - Cristiano Ronaldo
-86 - James Rodríguez
+86 - James Rodriguez
 90 - Arjen Robben
-90 - Zlatan Ibrahimović
+90 - Zlatan Ibrahimovic
 
 """
 def constructFilter(defaultPosition = None):
