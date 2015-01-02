@@ -36,3 +36,13 @@ def binUpData(data):
     for value in data:
         binValues[value] += 1
     return (bins,binValues)
+
+"""
+This is an interactive way of constructing filterParameters for a player.
+"""
+def constructFilter():
+    
+    while(True):    
+        break
+
+
