@@ -20,8 +20,19 @@ def closeDatabaseConnection(connection):
 """
 This gets all information about all players.
 """
-def getAllPlayerStats(cursor):
-    cursor.execute("Select * from PlayerInfo JOIN PlayerStats ON PlayerInfo.pid = PlayerStats.pid;")
+def getAllPlayerStats(cursor, ignoreSpecialCards = True, ignoreLegends = True):
+    if(ignoreSpecialCards):
+        query = "Select * from (Select MIN(pid) as minPid, * from PlayerInfo GROUP BY Full_Name) PlayerInfo JOIN PlayerStats ON PlayerInfo.minPid = PlayerStats.pid "
+    else:
+        query = "Select * from PlayerInfo JOIN PlayerStats ON PlayerInfo.pid = PlayerStats.pid "
+    
+    filterQuery = ";"
+    if(ignoreLegends):
+        filterQuery = " WHERE PlayerInfo.League <> 'Legends';"
+        
+    query += filterQuery
+        
+    cursor.execute(query)
     rows = []
     for row in cursor.fetchall():
         rows.append(row)
@@ -30,8 +41,19 @@ def getAllPlayerStats(cursor):
 """
 This gets all information about all goalkeepers.
 """
-def getAllGoalKeeperStats(cursor):
-    cursor.execute("Select * from PlayerInfo JOIN GoalkeeperStats ON PlayerInfo.pid = GoalkeeperStats.pid;")
+def getAllGoalKeeperStats(cursor, ignoreSpecialCards = True, ignoreLegends = True):
+    if(ignoreSpecialCards):
+        query = "Select * from (Select MIN(pid) as minPid, * from PlayerInfo GROUP BY Full_Name) PlayerInfo JOIN GoalkeeperStats ON PlayerInfo.pid = GoalkeeperStats.pid "
+    else:
+        query = "Select * from PlayerInfo JOIN GoalkeeperStats ON PlayerInfo.pid = GoalkeeperStats.pid "
+    
+    filterQuery = ";"
+    if(ignoreLegends):
+        filterQuery = " WHERE PlayerInfo.League <> 'Legends';"
+        
+    query += filterQuery
+    
+    cursor.execute(query)
     rows = []
     for row in cursor.fetchall():
         rows.append(row)

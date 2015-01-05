@@ -17,6 +17,10 @@ Given a playerId, attribute mapping, this function returns
 """
 def getMaximumAndMinimumElements(filteredResults):
     data = filteredResults.values()
+    data = filter(lambda a: a != 0, data)
+    if(len(data)==0):
+        return (["--"],["--"])
+    
     maxValue = max(data)
     minValue = min(data)
     maxElements = []

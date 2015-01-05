@@ -10,6 +10,15 @@ import databaseQueries
 For a given FIFA version, this function will create plots for each of the stats for both outfield players and goalkeepers.
 """
 def plotCurves(fifaVersion):
+    print "\n\n----------------------------------"
+    print "-----------FIFA " + str(fifaVersion) + "----------------"
+    print "----------------------------------"
+    plotAttributePlots(fifaVersion)
+
+"""
+This plots the basic plots of all the attributes. Graphs would be (attribute value) vs (number of players with that value)
+"""        
+def plotAttributePlots(fifaVersion):
     finalBaseAttribute = "HEA"
     if(fifaVersion == 15):
         finalBaseAttribute = "PHY"
@@ -26,9 +35,15 @@ def plotCurves(fifaVersion):
     
     goalkeeperStatsFields = ["GK_DIV", "HAN", "KIC", "REF", "SPE", "POS", "Player_Rating"]
 
+    print "\n---------------------------"
+    print "-----Outfield Players------"
+    print "---------------------------"
     for attribute in playerStatsFields:
         getOutfieldAttributePlot(attribute, fifaVersion)
         
+    print "\n---------------------------"
+    print "-----Goalkeepers-----------"
+    print "---------------------------"
     for attribute in goalkeeperStatsFields:
         getGoalkeeperAttributePlot(attribute, fifaVersion)
 
@@ -67,24 +82,31 @@ Given a dictionary of <playerId -- playerName, attributeValue>, this function co
 A normal distribution is expected.
 """
 def plotDistribution(filteredResults, attribute, fifaVersion, fileName):
+    print "\nAttribute : " + attribute
+    
     t = utilityFunctions.getMaximumAndMinimumElements(filteredResults)
     maximumElements = t[0]
     minimumElements = t[1]
     
     data = filteredResults.values()
+    data = filter(lambda a: a != 0, data)
     data.sort()
     
-    mean = np.mean(data)
-    std = np.std(data)
-    maximum = max(data)
-    minimum = min(data)
+    mean = -1
+    std = -1
+    maximum = -1
+    minimum = -1
+    
+    if(len(data)!=0):
+        mean = np.mean(data)
+        std = np.std(data)
+        maximum = max(data)
+        minimum = min(data)
     
     print "Mean : " + str(mean)
     print "Standard Deviation : " + str(std)
-    print "Max : " + str(maximum) + " by " + str(maximumElements)
-    print "Min : " + str(minimum) + " by " + str(minimumElements)
-    
-    plt.figure()
+    print "Max : " + str(maximum) + " by " + str(maximumElements[0])
+    print "Min : " + str(minimum) + " by " + str(minimumElements[0])
     
     plt.title(attribute + " plot for FIFA " + str(fifaVersion))
     
@@ -95,3 +117,4 @@ def plotDistribution(filteredResults, attribute, fifaVersion, fileName):
     plt.plot(binnedData[0],binnedData[1])
 
     plt.savefig(fileName)
+    plt.clf()
