@@ -14,26 +14,49 @@ def plotCurves(fifaVersion):
     print "-----------FIFA " + str(fifaVersion) + "----------------"
     print "----------------------------------"
     plotAttributePlots(fifaVersion)
+    plotAttributePairPlots(fifaVersion)
+
+"""
+This is a scatter plot for all pairs of attributes.
+"""
+def plotAttributePairPlots(fifaVersion):
+    connection = databaseQueries.getDatabaseConnection(str(fifaVersion)  + ".db")
+    cursor = databaseQueries.getConnectionCursor(connection)
+    
+    outfieldPlayerStats = databaseQueries.getAllPlayerStats(cursor)
+    goalkeeperStats = databaseQueries.getAllGoalKeeperStats(cursor)
+    
+    databaseQueries.closeDatabaseConnection(connection)
+    
+    playerStatsFields = utilityFunctions.getPlayerStatFields(False, fifaVersion)
+    goalkeeperStatsFields = utilityFunctions.getPlayerStatFields(True, fifaVersion)
+    
+    for i in range(0,len(playerStatsFields)):
+        for j in range(i+1,len(playerStatsFields)):
+            firstAttribute = playerStatsFields[i]
+            secondAttribute = playerStatsFields[j]
+            fileName = "plots/" + str(fifaVersion) + "/outfieldPlayers/" + firstAttribute + " & " + secondAttribute + ".png"
+            x = utilityFunctions.getAttributeValueList(outfieldPlayerStats, firstAttribute)
+            y = utilityFunctions.getAttributeValueList(outfieldPlayerStats, secondAttribute)
+            twoAttributeScatterPlot(x, y, firstAttribute, secondAttribute, fileName, fifaVersion)
+            print fileName
+            
+    for i in range(0,len(goalkeeperStatsFields)):
+        for j in range(i+1,len(goalkeeperStatsFields)):
+            firstAttribute = goalkeeperStatsFields[i]
+            secondAttribute = goalkeeperStatsFields[j]
+            fileName = "plots/" + str(fifaVersion) + "/goalKeepers/" + firstAttribute + " & " + secondAttribute + ".png"
+            x = utilityFunctions.getAttributeValueList(goalkeeperStats, firstAttribute)
+            y = utilityFunctions.getAttributeValueList(goalkeeperStats, secondAttribute)
+            twoAttributeScatterPlot(x, y, firstAttribute, secondAttribute, fileName, fifaVersion)
+            print fileName
 
 """
 This plots the basic plots of all the attributes. Graphs would be (attribute value) vs (number of players with that value)
 """        
 def plotAttributePlots(fifaVersion):
-    finalBaseAttribute = "HEA"
-    if(fifaVersion == 15):
-        finalBaseAttribute = "PHY"
-        
-    playerStatsFields = ["PAC","SHO","PAS","DRI",
-                        "DEF",finalBaseAttribute,"Ball_Control", 
-                        "Crossing", "Curve", "Dribbling", "Finishing", 
-                        "Free_Kick_Accuracy","Heading_Accuracy", "Long_Passing", 
-                        "Long_Shots", "Marking", "Penalties", "Short_Passing",
-                        "Shot_Power", "Sliding_Tackle", "Standing_Tackle", "Volleys", 
-                        "Acceleration", "Agility", "Balance","Jumping", "Reactions", 
-                        "Sprint_Speed", "Stamina","Strength", "Aggression", "Positioning", 
-                        "Interceptions","Vision", "Player_Rating"]
-    
-    goalkeeperStatsFields = ["GK_DIV", "HAN", "KIC", "REF", "SPE", "POS", "Player_Rating"]
+    playerStatsFields = utilityFunctions.getPlayerStatFields(False, fifaVersion)
+    goalkeeperStatsFields = utilityFunctions.getPlayerStatFields(True, fifaVersion)
 
     print "\n---------------------------"
     print "-----Outfield Players------"
@@ -63,7 +86,7 @@ def getOutfieldAttributePlot(attribute, fifaVersion):
     databaseQueries.closeDatabaseConnection(connection)
 
 """
-Given a goalkepper player attribute and a fifaVersion, this function obtains a basic plot of the distribution of values.
+Given a goalkeeper player attribute and a fifaVersion, this function obtains a basic plot of the distribution of values.
 """
 def getGoalkeeperAttributePlot(attribute, fifaVersion):
     connection = databaseQueries.getDatabaseConnection(str(fifaVersion)  + ".db")
@@ -76,6 +99,20 @@ def getGoalkeeperAttributePlot(attribute, fifaVersion):
     plotDistribution(filteredResults, attribute, fifaVersion, fileName)
     
     databaseQueries.closeDatabaseConnection(connection)
+
+"""
+Takes in the value of two attributes and does a scatter plot. Will help identify regions of high density.
+"""
+def twoAttributeScatterPlot(x, y, firstAttribute, secondAttribute, fileName, fifaVersion):
+    plt.title(fileName + " & " + secondAttribute + " plot for FIFA " + str(fifaVersion))
+    
+    plt.xlabel(firstAttribute)
+    plt.ylabel(secondAttribute)
+
+    plt.scatter(x,y)
+
+    plt.savefig(fileName)
+    plt.clf()
 
 """
 Given a dictionary of <playerId -- playerName, attributeValue>, this function computes the mean, standard deviation, maximum, minimum and plots the graph.

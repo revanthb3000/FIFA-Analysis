@@ -13,6 +13,40 @@ def getPlayerAttributeMapping(results, attribute):
     return filteredResults
 
 """
+Given a list of results where each element in the list is a mapping from fields to values, this function returns a list of values for a desired field.
+"""
+def getAttributeValueList(results, field):
+    values = []
+    for result in results:
+        values.append(result[field])
+    return values
+
+"""
+Returns the various fields present in the database tables.
+"""
+def getPlayerStatFields(isGoalkeeper, fifaVersion):
+    finalBaseAttribute = "HEA"
+    if(fifaVersion == 15):
+        finalBaseAttribute = "PHY"
+        
+    playerStatsFields = ["PAC","SHO","PAS","DRI",
+                        "DEF",finalBaseAttribute,"Ball_Control", 
+                        "Crossing", "Curve", "Dribbling", "Finishing", 
+                        "Free_Kick_Accuracy","Heading_Accuracy", "Long_Passing", 
+                        "Long_Shots", "Marking", "Penalties", "Short_Passing",
+                        "Shot_Power", "Sliding_Tackle", "Standing_Tackle", "Volleys", 
+                        "Acceleration", "Agility", "Balance","Jumping", "Reactions", 
+                        "Sprint_Speed", "Stamina","Strength", "Aggression", "Positioning", 
+                        "Interceptions","Vision", "Player_Rating"]
+    
+    goalkeeperStatsFields = ["GK_DIV", "HAN", "KIC", "REF", "SPE", "POS", "Player_Rating"]
+    
+    if(isGoalkeeper):
+        return goalkeeperStatsFields
+    else:
+        return playerStatsFields
+
+"""
 Given a playerId, attribute mapping, this function returns 
 """
 def getMaximumAndMinimumElements(filteredResults):
