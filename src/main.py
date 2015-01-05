@@ -8,9 +8,6 @@ import exampleFilters
 from formations import teamFormations
 import utilityFunctions
 
-def getTeam(filterParameters):
-    return
-
 def main():
     connection = databaseQueries.getDatabaseConnection("15.db")
     cursor = databaseQueries.getConnectionCursor(connection)
